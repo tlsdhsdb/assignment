@@ -1,0 +1,12 @@
+# Test your FastAPI endpoints
+
+GET http://127.0.0.1:8000/trademark/search?productName=ㅍㄹㅅㅋ&registerStatus=등록&page=0&size=20
+Accept: application/json
+
+
+###
+
+GET http://127.0.0.1:8000/trademark/suggest?query=P
+Accept: application/json
+
+###

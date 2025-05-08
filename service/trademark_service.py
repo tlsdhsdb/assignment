@@ -3,7 +3,8 @@
 from entity.query import TrademarkSearchQuery
 from entity.dto import SuggestResponse,SearchResponse
 from repository.trademark_repository import load_data
-from util.text import is_chosung_only, normalize, match_chosung_jamo, is_korean, is_english
+from util.text import is_chosung_only, normalize, match_chosung_jamo, is_korean, is_english, get_chosung_jamo
+
 
 def search_trademarks(query: TrademarkSearchQuery,page: int = 0, size: int = 10) -> SearchResponse:
     data = load_data()
@@ -14,7 +15,9 @@ def search_trademarks(query: TrademarkSearchQuery,page: int = 0, size: int = 10)
     if query.productName:
         keyword = normalize(query.productName)
         if is_chosung_only(keyword):
-            data = [d for d in data if d.productName and match_chosung_jamo(keyword, d.productName)]
+            matched = [d for d in data if d.productName and get_chosung_jamo(d.productName) == keyword]
+            included = [d for d in data if d.productName and keyword in get_chosung_jamo(d.productName) and d not in matched]
+            data = matched + included
         else:
             data = [d for d in data if d.productName and keyword in normalize(d.productName)]
 
